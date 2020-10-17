@@ -1,19 +1,95 @@
-// Assignment Code
-var generateBtn = document.querySelector("#generate");
+// Target our DOM elements
 
-// Write password to the #password input
-function writePassword() {
-  var password = generatePassword();
-  var passwordText = document.querySelector("#password");
+// generated password text area output
+const passwordText = document.getElementById("password");
+const lengthElement = document.getElementById("length");
+const uppercaseElement = document.getElementById("uppercase");
+const lowercaseElement = document.getElementById("lowercase");
+const numbersElement = document.getElementById("numbers");
+const symbolsElement = document.getElementById("symbols");
+const generateBtn = document.getElementById("generate");
 
-  passwordText.value = password;
+// Generate event listner
+generateBtn.addEventListener("click", () => {
+  const length = parseInt(lengthElement.value);
+  const hasUpper = uppercaseElement.checked;
+  const hasLower = lowercaseElement.checked;
+  const hasNumber = numbersElement.checked;
+  const hasSymbol = symbolsElement.checked;
+
+  console.log(hasLower, hasUpper, hasNumber, hasSymbol);
+
+  passwordText.innerHTML = generatePassword(
+    length,
+    hasUpper,
+    hasLower,
+    hasNumber,
+    hasSymbol
+  );
+});
+
+// GeneratePassword Function
+function generatePassword(length, upper, lower, number, symbol) {
+  // 1. initialize a pssword variable that we will add onto
+  // 2. Filter out unchecked types (upper, lower, number, symbol)
+  // 3. Loop over the length the user says they want
+  // 4. call generator function for each type
+  // 5. add the final password to the password variable and return it for out password text
+
+  let generatedPassword = "";
+
+  const typesCount = upper + lower + number + symbol;
+
+
+  console.log("typesCont: ", typesCount);
+
+  const typesArr = [{ upper }, { lower }, { number }, { symbol }].filter(
+    (item) => Object.values(item)[0]
+  );
+
+  console.log(typesArr);
+
+  if (typesCount === 0) {
+    return "";
+  }
+
+  for (let i = 0; i < length; i += typesCount) {
+    typesArr.forEach((type) => {
+      const funcName = Object.keys(type)[0];
+      // console.log("fucn name", funcName)
+      generatedPassword += randomFunc[funcName]();
+    });
+  }
+  console.log(generatedPassword.slice(0, length));
+
+  const finalPassword = generatedPassword.slice(0, length);
+
+  return finalPassword;
 }
 
-function generatePassword() {
-function generatePassword() {
+const randomFunc = {
+  lower: getRandomLower,
+  upper: getRandomUpper,
+  number: getRandomNumber,
+  symbol: getRandomSymbol,
+};
 
-  
+// Generator Functions
+
+function getRandomLower() {
+  return String.fromCharCode(Math.floor(Math.random() * 26) + 97);
 }
 
-// Add event listener to generate button
-generateBtn.addEventListener("click", writePassword);
+function getRandomUpper() {
+  return String.fromCharCode(Math.floor(Math.random() * 26) + 65);
+}
+
+function getRandomNumber() {
+  return String.fromCharCode(Math.floor(Math.random() * 10) + 48);
+}
+
+function getRandomSymbol() {
+  return String.fromCharCode(Math.floor(Math.random() * 11) + 33);
+}
+
+console.log(getRandomSymbol());
